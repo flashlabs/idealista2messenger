@@ -20,10 +20,20 @@ func Execute() (bool, error) {
 		return false, err
 	}
 
-	err = task.FetchLabels(srv)
+	messages, err := task.FetchMessages(srv)
 	if err != nil {
 		return false, err
 	}
+
+	err = task.DisplayMessages(srv, messages)
+	if err != nil {
+		return false, err
+	}
+
+	//err = task.MarkRead(srv, messages)
+	//if err != nil {
+	//	return false, err
+	//}
 
 	return true, nil
 }
