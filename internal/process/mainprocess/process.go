@@ -30,10 +30,10 @@ func Execute() (bool, error) {
 		return false, err
 	}
 
-	//err = task.MarkRead(srv, messages)
-	//if err != nil {
-	//	return false, err
-	//}
+	err = task.MarkRead(srv, messages)
+	if err != nil {
+		return false, err
+	}
 
 	return true, nil
 }

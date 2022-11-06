@@ -15,7 +15,7 @@ import (
 
 func GetClient(credentials []byte) (*http.Client, error) {
 	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(credentials, gmail.GmailReadonlyScope)
+	config, err := google.ConfigFromJSON(credentials, gmail.GmailModifyScope)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Unable to parse client secret file to config: %v", err))
 	}
