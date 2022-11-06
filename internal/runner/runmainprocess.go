@@ -1,9 +1,19 @@
 package runner
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/flashlabs/idealista2messenger/internal/process/mainprocess"
+)
 
 func RunMainProcess() bool {
 	fmt.Println("Main process")
 
-	return true
+	success, err := mainprocess.Execute()
+	if err != nil {
+		fmt.Println(err)
+
+		return false
+	}
+
+	return success
 }
