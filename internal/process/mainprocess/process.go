@@ -25,7 +25,12 @@ func Execute() (bool, error) {
 		return false, err
 	}
 
-	err = task.DisplayMessages(srv, messages)
+	//err = task.DisplayMessages(srv, messages)
+	//if err != nil {
+	//	return false, err
+	//}
+
+	err = task.SendMessages(srv, messages)
 	if err != nil {
 		return false, err
 	}
