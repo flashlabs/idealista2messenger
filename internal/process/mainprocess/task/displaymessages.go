@@ -20,14 +20,6 @@ func DisplayMessages(srv *gmail.Service, r *gmail.ListMessagesResponse) error {
 			log.Fatalf("Unable to read message details: %v", err)
 		}
 		fmt.Printf("%s %s: %s\n", msg.Id, msg.LabelIds, msg.Snippet)
-
-		//modifyMessageRequest := gmail.ModifyMessageRequest{
-		//	RemoveLabelIds: []string{"UNREAD"},
-		//}
-		//_, err = srv.Users.Messages.Modify(user, msg.Id, &modifyMessageRequest).Do()
-		//if err != nil {
-		//	return err
-		//}
 	}
 
 	return nil

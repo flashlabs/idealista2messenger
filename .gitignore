@@ -1,2 +1,5 @@
 .idea
-token.json
+config/token.json
+config/page_access_token.json
+main
+i2m_linux_amd64
