@@ -7,15 +7,14 @@ import (
 	"log"
 )
 
-func DisplayMessages(srv *gmail.Service, r *gmail.ListMessagesResponse) error {
+func DisplayMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, userId string) error {
 	if len(r.Messages) == 0 {
 		return errors.New("no messages found")
 	}
 
 	fmt.Println("Messages:")
-	user := "me"
 	for _, m := range r.Messages {
-		msg, err := srv.Users.Messages.Get(user, m.Id).Do()
+		msg, err := srv.Users.Messages.Get(userId, m.Id).Do()
 		if err != nil {
 			log.Fatalf("Unable to read message details: %v", err)
 		}

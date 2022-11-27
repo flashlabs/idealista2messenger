@@ -4,13 +4,12 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
-func MarkRead(srv *gmail.Service, r *gmail.ListMessagesResponse) error {
-	user := "me"
+func MarkRead(srv *gmail.Service, r *gmail.ListMessagesResponse, userId string) error {
 	for _, m := range r.Messages {
 		modifyMessageRequest := gmail.ModifyMessageRequest{
 			RemoveLabelIds: []string{"UNREAD"},
 		}
-		_, err := srv.Users.Messages.Modify(user, m.Id, &modifyMessageRequest).Do()
+		_, err := srv.Users.Messages.Modify(userId, m.Id, &modifyMessageRequest).Do()
 		if err != nil {
 			return err
 		}

@@ -21,8 +21,8 @@ func AccessTokenFromFile(file string) (*oauth2.Token, error) {
 	return tok, err
 }
 
-// GetTokenFromWeb Request a token from the web, then returns the retrieved token.
-func GetTokenFromWeb(config *oauth2.Config) *oauth2.Token {
+// GetAccessTokenFromWeb Request a token from the web, then returns the retrieved token.
+func GetAccessTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
 		"authorization code: \n%v\n", authURL)
