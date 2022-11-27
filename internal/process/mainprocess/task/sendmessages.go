@@ -16,7 +16,6 @@ import (
 const (
 	graphApiUrl     = "https://graph.facebook.com"
 	apiVersion      = "v15.0"
-	pageId          = "302111363180912"
 	messageTemplate = `
 {
     "attachment":{
@@ -48,18 +47,15 @@ const (
 `
 )
 
-func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse) error {
-	token, err := pkgToken.PageAccessTokenFromFile("config/page_access_token.json")
+func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessToken, gmailUserId, pageId string, recipients []string) error {
+	token, err := pkgToken.PageAccessTokenFromFile(pageAccessToken)
 	if err != nil {
 		return err
 	}
 
-	recipients := []string{"8286382568098581", "5612631752117262"}
-	user := "me"
-
 	fmt.Printf("Sending %d message(s) to %s\n", len(r.Messages), recipients)
 	for _, m := range r.Messages {
-		msg, err := srv.Users.Messages.Get(user, m.Id).Format("raw").Do()
+		msg, err := srv.Users.Messages.Get(gmailUserId, m.Id).Format("raw").Do()
 		if err != nil {
 			log.Fatalf("Unable to read message details: %v", err)
 		}
@@ -67,21 +63,31 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse) error {
 		imageUrl, link := parseMessage(msg.Raw)
 		messengerMsg := fmt.Sprintf(messageTemplate, msg.Snippet, imageUrl, link, link)
 		for _, recipientId := range recipients {
-			rcp := structs.Recipient{Id: recipientId}
-			recipient, _ := json.Marshal(rcp)
-			resp, err := http.Post(getApiUrl(recipient, messengerMsg, token.Token), "", nil)
+			err = sendMessage(recipientId, messengerMsg, token, pageId)
 			if err != nil {
 				log.Fatalf("Unable to send message details: %v", err)
+				continue
 			}
-			_ = resp.Body.Close()
-			fmt.Printf("Message %s to %s sent\n", msg.Id, rcp.Id)
+
+			fmt.Printf("Message %s to %s sent\n", msg.Id, recipientId)
 		}
 	}
 
 	return nil
 }
 
-func getApiUrl(recipient []byte, messengerMsg, token string) string {
+func sendMessage(recipientId string, messengerMsg string, token *structs.PageAccessToken, pageId string) error {
+	recipient, _ := json.Marshal(structs.Recipient{Id: recipientId})
+	resp, err := http.Post(getApiUrl(recipient, messengerMsg, token.Token, pageId), "", nil)
+	_ = resp.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func getApiUrl(recipient []byte, messengerMsg, token, pageId string) string {
 	apiUrl := fmt.Sprintf("%s/%s/%s/messages?recipient=%s&messaging_type=RESPONSE&message=%s&access_token=%s",
 		graphApiUrl,
 		apiVersion,
