@@ -106,16 +106,17 @@ func parseMessage(rawMessage string) (imageUrl, link string) {
 	r, _ := regexp.Compile("https://www.idealista.com/en/inmueble/([0-9]+)/")
 	link = r.FindString(raw)
 
-	r, _ = regexp.Compile("blur/(.+)/0")
+	r, _ = regexp.Compile("blur/([a-zA-Z0-9_]+)/0")
 	urlPart := r.FindString(raw)
 	if urlPart == "" {
 		urlPart = "blur/500_375_mq/0"
 	}
 
-	r, _ = regexp.Compile("([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+).jpg")
+	// the less in pattern, the better
+	r, _ = regexp.Compile("([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+).j")
 	imageUrl = r.FindString(raw)
 
-	imageUrlTemplate := "https://img3.idealista.com/%s/id.pro.es.image.master/%s"
+	imageUrlTemplate := "https://img3.idealista.com/%s/id.pro.es.image.master/%spg"
 
 	return fmt.Sprintf(imageUrlTemplate, urlPart, imageUrl), link
 }
