@@ -9,14 +9,20 @@ import (
 )
 
 const appConfigFile = "app.yml"
+const googleConfigFile = "google.yml"
+const messengerConfigFile = "messenger.yml"
 
 type Config struct {
 	Application structs.Application
+	Google      structs.Google
+	Messenger   structs.Messenger
 }
 
 func InitConfig(configPath string) *Config {
 	config := &Config{}
 	readCfg(&config.Application, configPath, appConfigFile)
+	readCfg(&config.Google, configPath, googleConfigFile)
+	readCfg(&config.Messenger, configPath, messengerConfigFile)
 
 	return config
 }

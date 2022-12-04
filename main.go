@@ -16,7 +16,7 @@ func main() {
 
 	initialize(config)
 
-	runner.RunMainProcess()
+	runner.RunMainProcess(config)
 
 	fmt.Printf("Application \"%s\" has finished processing\n", config.Application.Name)
 }
@@ -30,5 +30,5 @@ func getInput() string {
 }
 
 func initialize(config *initializer.Config) {
-	// TODO
+	initializer.InitEnv(config)
 }
