@@ -4,8 +4,8 @@ import (
 	"os"
 )
 
-func LoadCredentials() ([]byte, error) {
-	b, err := os.ReadFile("config/credentials.json")
+func LoadCredentials(credentialsFile string) ([]byte, error) {
+	b, err := os.ReadFile(credentialsFile)
 	if err != nil {
 		return nil, err
 	}

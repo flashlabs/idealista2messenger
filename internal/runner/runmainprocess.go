@@ -12,6 +12,7 @@ func RunMainProcess() bool {
 	success, err := mainprocess.Execute(input.Input{
 		AccessTokenFileLocation:     "config/token.json",
 		PageAccessTokenFileLocation: "config/page_access_token.json",
+		CredentialsFileLocation:     "config/credentials.json",
 		GmailUserId:                 "me",                                             // TODO: move to .env
 		GmailQuery:                  "is:unread from:idealista.com",                   // TODO: move to .env
 		PageId:                      "302111363180912",                                // TODO: move to .env

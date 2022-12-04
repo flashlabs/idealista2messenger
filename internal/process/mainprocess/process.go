@@ -6,7 +6,7 @@ import (
 )
 
 func Execute(input input.Input) (bool, error) {
-	credentials, err := task.LoadCredentials()
+	credentials, err := task.LoadCredentials(input.CredentialsFileLocation)
 	if err != nil {
 		return false, err
 	}
