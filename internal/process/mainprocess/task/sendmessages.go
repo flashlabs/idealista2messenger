@@ -79,6 +79,7 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 func sendMessage(recipientId string, messengerMsg string, token *structs.PageAccessToken, pageId string) error {
 	recipient, _ := json.Marshal(structs.Recipient{Id: recipientId})
 	resp, err := http.Post(getApiUrl(recipient, messengerMsg, token.Token, pageId), "", nil)
+	fmt.Println(resp.Status)
 	_ = resp.Body.Close()
 	if err != nil {
 		return err
