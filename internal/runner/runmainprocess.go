@@ -2,21 +2,24 @@ package runner
 
 import (
 	"fmt"
+	"github.com/flashlabs/idealista2messenger/internal/initializer"
 	"github.com/flashlabs/idealista2messenger/internal/process/mainprocess"
 	"github.com/flashlabs/idealista2messenger/internal/process/mainprocess/input"
+	"os"
+	"strings"
 )
 
-func RunMainProcess() bool {
+func RunMainProcess(config *initializer.Config) bool {
 	fmt.Println("Main process")
 
 	success, err := mainprocess.Execute(input.Input{
-		AccessTokenFileLocation:     "config/token.json",
-		PageAccessTokenFileLocation: "config/page_access_token.json",
-		CredentialsFileLocation:     "config/credentials.json",
-		GmailUserId:                 "me",                                             // TODO: move to .env
-		GmailQuery:                  "is:unread from:idealista.com",                   // TODO: move to .env
-		PageId:                      "302111363180912",                                // TODO: move to .env
-		Recipients:                  []string{"8286382568098581", "5612631752117262"}, // TODO: move to .env
+		AccessTokenFileLocation:     config.Google.AccessTokenFile,
+		CredentialsFileLocation:     config.Google.CredentialsFile,
+		PageAccessTokenFileLocation: config.Messenger.PageAccessTokenFile,
+		GmailUserId:                 os.Getenv("GMAIL_USER_ID"),
+		GmailQuery:                  os.Getenv("GMAIL_QUERY"),
+		PageId:                      os.Getenv("FB_PAGE_ID"),
+		Recipients:                  strings.Split(os.Getenv("FB_PAGE_RECIPIENTS"), ","),
 	})
 	if err != nil {
 		fmt.Println(err)
