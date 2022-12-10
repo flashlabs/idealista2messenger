@@ -2,58 +2,22 @@ package task
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"github.com/flashlabs/idealista2messenger/internal/structs"
-	pkgToken "github.com/flashlabs/idealista2messenger/internal/token"
+	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
 	"google.golang.org/api/gmail/v1"
 	"log"
 	"net/http"
-	"net/url"
 	"regexp"
 )
 
-const (
-	graphApiUrl     = "https://graph.facebook.com"
-	apiVersion      = "v15.0"
-	messageTemplate = `
-{
-    "attachment":{
-      "type":"template",
-      "payload":{
-        "template_type":"generic",
-        "elements":[
-           {
-            "title":"%s",
-            "image_url":"%s",
-            "subtitle":"Delivered with love by flashlabs ♥",
-            "default_action": {
-              "type": "web_url",
-              "url": "%s",
-              "webview_height_ratio": "tall"
-            },
-            "buttons":[
-              {
-                "type":"web_url",
-                "url":"%s",
-                "title":"View Offer"
-              }             
-            ]      
-          }
-        ]
-      }
-    }
-  }
-`
-)
-
 func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessToken, gmailUserId, pageId string, recipients []string) error {
-	token, err := pkgToken.PageAccessTokenFromFile(pageAccessToken)
+	fmt.Printf("Sending %d message(s) to %s\n", len(r.Messages), recipients)
+
+	c, err := graphapi.NewGraphApiClient(pageAccessToken, pageId)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Sending %d message(s) to %s\n", len(r.Messages), recipients)
 	for _, m := range r.Messages {
 		msg, err := srv.Users.Messages.Get(gmailUserId, m.Id).Format("raw").Do()
 		if err != nil {
@@ -61,11 +25,16 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 		}
 
 		imageUrl, link := parseMessage(msg.Raw)
-		messengerMsg := fmt.Sprintf(messageTemplate, msg.Snippet, imageUrl, link, link)
 		for _, recipientId := range recipients {
-			err = sendMessage(recipientId, messengerMsg, token, pageId)
+			status, err := c.SendMessage(recipientId, msg.Snippet, imageUrl, link)
+
 			if err != nil {
-				log.Fatalf("Unable to send message details: %v", err)
+				fmt.Printf("Unable to send message details: %v", err)
+				continue
+			}
+
+			if status != http.StatusOK {
+				fmt.Printf("Message %s to %s not sent, status %d\n", msg.Id, recipientId, status)
 				continue
 			}
 
@@ -74,30 +43,6 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 	}
 
 	return nil
-}
-
-func sendMessage(recipientId string, messengerMsg string, token *structs.PageAccessToken, pageId string) error {
-	recipient, _ := json.Marshal(structs.Recipient{Id: recipientId})
-	resp, err := http.Post(getApiUrl(recipient, messengerMsg, token.Token, pageId), "", nil)
-	fmt.Println(resp.Status)
-	_ = resp.Body.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func getApiUrl(recipient []byte, messengerMsg, token, pageId string) string {
-	apiUrl := fmt.Sprintf("%s/%s/%s/messages?recipient=%s&messaging_type=RESPONSE&message=%s&access_token=%s",
-		graphApiUrl,
-		apiVersion,
-		pageId,
-		url.QueryEscape(string(recipient)),
-		url.QueryEscape(messengerMsg),
-		token,
-	)
-	return apiUrl
 }
 
 func parseMessage(rawMessage string) (imageUrl, link string) {

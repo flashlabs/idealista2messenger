@@ -1,4 +1,5 @@
 .idea
+config/credentials.json
 config/token.json
 config/page_access_token.json
 main
