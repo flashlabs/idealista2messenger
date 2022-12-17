@@ -64,7 +64,7 @@ You will need:
 #### Obtain Long Lived Paged Access Token
 Long-lived Page Access Token procedure:
 1. Get User Access Token:
-   - App: <you meta app>
+   - App: {your meta app}
    - User or Page token: User token
    - Permissions: pages_show_list, pages_messaging, pages_read_engagement
    - Tool: https://developers.facebook.com/tools/explorer/
@@ -74,7 +74,7 @@ Long-lived Page Access Token procedure:
    - Tool: https://developers.facebook.com/tools/debug/accesstoken/
 3. With long-lived User Access Token get long-lived Page Access Token:
    - Graph API version: v15.0
-   - App Scoped User ID: <your app scoped user id> 
+   - App Scoped User ID: {your app scoped user id} 
    - CURL: `curl -i -X GET "https://graph.facebook.com/{graph-api-version}/{app-scoped-user-id}/accounts?access_token={long-lived-user-access-token}"`
    - Docs: https://developers.facebook.com/docs/facebook-login/guides/access-tokens/get-long-lived/#long-lived-page-token
 4. Long-lived Page Access Token save in `config/page_access_token.json` file.
