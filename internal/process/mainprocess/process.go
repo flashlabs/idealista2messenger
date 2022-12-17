@@ -26,11 +26,6 @@ func Execute(input input.Input) (bool, error) {
 		return false, err
 	}
 
-	//err = task.DisplayMessages(srv, messages, input.GmailUserId)
-	//if err != nil {
-	//	return false, err
-	//}
-
 	err = task.SendMessages(srv, messages, input.PageAccessTokenFileLocation, input.GmailUserId, input.PageId, input.Recipients)
 	if err != nil {
 		return false, err
