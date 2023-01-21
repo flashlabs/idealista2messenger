@@ -5,14 +5,14 @@ import (
 	"os"
 )
 
-func InitEnv(config *Config) {
+func Env() {
 	env := os.Getenv("I2M_ENV")
-	if "" == env {
+	if env == "" {
 		env = "development"
 	}
 
 	_ = godotenv.Load(".env." + env + ".local")
-	if "test" != env {
+	if env != "test" {
 		_ = godotenv.Load(".env.local")
 	}
 	_ = godotenv.Load(".env." + env)
