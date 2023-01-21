@@ -3,16 +3,16 @@ package runner
 import (
 	"fmt"
 	"github.com/flashlabs/idealista2messenger/internal/initializer"
-	"github.com/flashlabs/idealista2messenger/internal/process/mainprocess"
-	"github.com/flashlabs/idealista2messenger/internal/process/mainprocess/input"
+	"github.com/flashlabs/idealista2messenger/internal/process/messages"
+	"github.com/flashlabs/idealista2messenger/internal/process/messages/input"
 	"os"
 	"strings"
 )
 
-func RunMainProcess(config *initializer.Config) bool {
+func MainProcess(config *initializer.Config) bool {
 	fmt.Println("Main process")
 
-	success, err := mainprocess.Execute(input.Input{
+	success, err := messages.Execute(input.Params{
 		AccessTokenFileLocation:     config.Google.AccessTokenFile,
 		CredentialsFileLocation:     config.Google.CredentialsFile,
 		PageAccessTokenFileLocation: config.Messenger.PageAccessTokenFile,

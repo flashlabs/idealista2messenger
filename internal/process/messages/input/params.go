@@ -1,6 +1,6 @@
 package input
 
-type Input struct {
+type Params struct {
 	AccessTokenFileLocation, PageAccessTokenFileLocation, GmailUserId, GmailQuery,
 	PageId, CredentialsFileLocation string
 	Recipients []string

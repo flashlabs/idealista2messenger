@@ -8,19 +8,15 @@ import (
 )
 
 const (
-	configPath = "config"
+	configDirPath = "config"
 )
 
 func main() {
 	fmt.Printf("Idealista2Messenger %s\n", time.Now().Format("2006.01.02 15:04:05"))
 
-	config := initializer.InitConfig(configPath)
-	initialize(config)
-	runner.RunMainProcess(config)
+	config := initializer.Cfg(configDirPath)
+	initializer.Env()
+	runner.MainProcess(config)
 
 	fmt.Printf("Application \"%s\" has finished processing\n", config.Application.Name)
-}
-
-func initialize(config *initializer.Config) {
-	initializer.InitEnv(config)
 }

@@ -21,8 +21,8 @@ func AccessTokenFromFile(file string) (*oauth2.Token, error) {
 	return tok, err
 }
 
-// GetAccessTokenFromWeb Request a token from the web, then returns the retrieved token.
-func GetAccessTokenFromWeb(config *oauth2.Config) *oauth2.Token {
+// AccessTokenFromWeb Request a token from the web, then returns the retrieved token.
+func AccessTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
 		"authorization code: \n%v\n", authURL)
@@ -47,5 +47,5 @@ func SaveAccessToken(path string, token *oauth2.Token) {
 		log.Fatalf("Unable to cache oauth token: %v", err)
 	}
 	defer f.Close()
-	json.NewEncoder(f).Encode(token)
+	_ = json.NewEncoder(f).Encode(token)
 }

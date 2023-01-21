@@ -8,9 +8,11 @@ import (
 	"path/filepath"
 )
 
-const appConfigFile = "app.yml"
-const googleConfigFile = "google.yml"
-const messengerConfigFile = "messenger.yml"
+const (
+	appConfig       = "app.yml"
+	googleConfig    = "google.yml"
+	messengerConfig = "messenger.yml"
+)
 
 type Config struct {
 	Application structs.Application
@@ -18,20 +20,20 @@ type Config struct {
 	Messenger   structs.Messenger
 }
 
-func InitConfig(configPath string) *Config {
-	config := &Config{}
-	readCfg(&config.Application, configPath, appConfigFile)
-	readCfg(&config.Google, configPath, googleConfigFile)
-	readCfg(&config.Messenger, configPath, messengerConfigFile)
+func Cfg(dir string) *Config {
+	c := &Config{}
+	readCfg(&c.Application, dir, appConfig)
+	readCfg(&c.Google, dir, googleConfig)
+	readCfg(&c.Messenger, dir, messengerConfig)
 
-	return config
+	return c
 }
 
-func readCfg(config interface{}, configPath, configFile string) {
-	path := filepath.Join(configPath, configFile)
-	err := readYaml(config, path)
+func readCfg(target interface{}, dir, file string) {
+	p := filepath.Join(dir, file)
+	err := readYaml(target, p)
 	if err != nil {
-		log.Fatalf("failed to read config '%s' file: %s\n", path, err.Error())
+		log.Fatalf("failed to read config '%s' file: %s\n", p, err.Error())
 	}
 }
 
