@@ -1,0 +1,28 @@
+name: Execute linter
+
+on: [ push, pull_request ]
+
+permissions:
+  contents: read
+
+jobs:
+  golang-ci:
+    name: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.19.x' ]
+
+    steps:
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Display Go version
+        run: go version
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50.1
