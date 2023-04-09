@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
 	"google.golang.org/api/gmail/v1"
+	"io"
 	"log"
+	"mime/quotedprintable"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessToken, gmailUserId, pageId string, recipients []string) error {
@@ -46,8 +49,7 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 }
 
 func parseMessage(rawMessage string) (imageUrl, link string) {
-	decoded, _ := base64.RawURLEncoding.DecodeString(rawMessage)
-	raw := string(decoded)
+	raw := decodePayload(rawMessage)
 
 	r, _ := regexp.Compile("https://www.idealista.com/en/inmueble/([0-9]+)/")
 	link = r.FindString(raw)
@@ -65,4 +67,22 @@ func parseMessage(rawMessage string) (imageUrl, link string) {
 	imageUrlTemplate := "https://img3.idealista.com/%s/id.pro.es.image.master/%spg"
 
 	return fmt.Sprintf(imageUrlTemplate, urlPart, imageUrl), link
+}
+
+func decodePayload(rawMessage string) string {
+	decoded, _ := base64.RawURLEncoding.DecodeString(rawMessage)
+	raw := string(decoded)
+
+	// remove the headers parts causing issues
+	raw = raw[strings.Index(raw, "<!doctype"):]
+
+	return decodeQuotedPrintable(raw)
+}
+
+func decodeQuotedPrintable(raw string) string {
+	stringsReader := strings.NewReader(raw)
+	qpReader := quotedprintable.NewReader(stringsReader)
+	b, _ := io.ReadAll(qpReader)
+
+	return string(b)
 }
