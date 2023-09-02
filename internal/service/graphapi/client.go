@@ -3,9 +3,10 @@ package graphapi
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/flashlabs/idealista2messenger/internal/structs"
 	"net/http"
 	"net/url"
+
+	"github.com/flashlabs/idealista2messenger/internal/structs"
 )
 
 const (

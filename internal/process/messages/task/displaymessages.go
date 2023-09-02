@@ -3,10 +3,12 @@ package task
 import (
 	"errors"
 	"fmt"
-	"google.golang.org/api/gmail/v1"
 	"log"
+
+	"google.golang.org/api/gmail/v1"
 )
 
+// DisplayMessages reads user messages and prints them to output
 func DisplayMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, userId string) error {
 	if len(r.Messages) == 0 {
 		return errors.New("no messages found")

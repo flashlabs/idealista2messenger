@@ -1,11 +1,13 @@
 package initializer
 
 import (
-	"github.com/flashlabs/idealista2messenger/internal/structs"
-	"gopkg.in/yaml.v2"
 	"log"
 	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v2"
+
+	"github.com/flashlabs/idealista2messenger/internal/structs"
 )
 
 const (

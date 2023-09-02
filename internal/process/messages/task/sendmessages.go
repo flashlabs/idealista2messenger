@@ -3,14 +3,16 @@ package task
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
-	"google.golang.org/api/gmail/v1"
 	"io"
 	"log"
 	"mime/quotedprintable"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"google.golang.org/api/gmail/v1"
+
+	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
 )
 
 func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessToken, gmailUserId, pageId string, recipients []string) error {

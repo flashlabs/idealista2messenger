@@ -3,13 +3,16 @@ package task
 import (
 	"context"
 	"fmt"
-	"github.com/flashlabs/idealista2messenger/internal/token"
+	"net/http"
+
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/gmail/v1"
-	"net/http"
+
+	"github.com/flashlabs/idealista2messenger/internal/token"
 )
 
+// GoogleClient creates new Google Client and returns it
 func GoogleClient(credentials []byte, tokenFile string) (*http.Client, error) {
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(credentials, gmail.GmailModifyScope)
