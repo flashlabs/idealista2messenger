@@ -4,6 +4,7 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
+// MarkRead marks given messages in the Gmail service as read
 func MarkRead(srv *gmail.Service, r *gmail.ListMessagesResponse, userId string) error {
 	for _, m := range r.Messages {
 		modifyMessageRequest := gmail.ModifyMessageRequest{

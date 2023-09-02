@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/oauth2"
 	"log"
 	"os"
+
+	"golang.org/x/oauth2"
 )
 
 // AccessTokenFromFile Retrieves a token from a local file.

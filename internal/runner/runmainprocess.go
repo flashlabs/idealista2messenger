@@ -2,11 +2,12 @@ package runner
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/flashlabs/idealista2messenger/internal/initializer"
 	"github.com/flashlabs/idealista2messenger/internal/process/messages"
 	"github.com/flashlabs/idealista2messenger/internal/process/messages/input"
-	"os"
-	"strings"
 )
 
 func MainProcess(config *initializer.Config) bool {
