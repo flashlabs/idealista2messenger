@@ -9,11 +9,26 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"sync"
 
 	"google.golang.org/api/gmail/v1"
 
 	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
 )
+
+type sendMessageParams struct {
+	Message     *gmail.Message
+	Client      graphapi.Client
+	Server      *gmail.Service
+	GmailUserID string
+	Recipients  []string
+}
+
+type sendMessageOperators struct {
+	WaitGroup *sync.WaitGroup
+	Limiter   chan int
+	Counter   int
+}
 
 func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessToken, gmailUserId, pageId string, recipients []string) error {
 	fmt.Printf("Sending %d message(s) to %s\n", len(r.Messages), recipients)
@@ -23,31 +38,60 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 		return err
 	}
 
+	wg := sync.WaitGroup{}
+	limiter := make(chan int, 20)
+	defer close(limiter)
+
+	counter := 0
 	for _, m := range r.Messages {
-		msg, err := srv.Users.Messages.Get(gmailUserId, m.Id).Format("raw").Do()
-		if err != nil {
-			log.Fatalf("Unable to read message details: %v", err)
-		}
+		wg.Add(1)
+		limiter <- 1
+		counter++
 
-		imageUrl, link := parseMessage(msg.Raw)
-		for _, recipientId := range recipients {
-			status, err := c.SendMessage(recipientId, msg.Snippet, imageUrl, link)
-
-			if err != nil {
-				fmt.Printf("Unable to send message details: %v", err)
-				continue
-			}
-
-			if status != http.StatusOK {
-				fmt.Printf("Message %s to %s not sent, status %d\n", msg.Id, recipientId, status)
-				continue
-			}
-
-			fmt.Printf("Message %s to %s sent\n", msg.Id, recipientId)
-		}
+		go sendMessage(sendMessageParams{
+			Message:     m,
+			Client:      c,
+			Server:      srv,
+			GmailUserID: gmailUserId,
+			Recipients:  recipients,
+		}, sendMessageOperators{
+			WaitGroup: &wg,
+			Limiter:   limiter,
+			Counter:   counter,
+		})
 	}
 
+	wg.Wait()
+
 	return nil
+}
+
+func sendMessage(p sendMessageParams, op sendMessageOperators) {
+	defer op.WaitGroup.Done()
+
+	msg, err := p.Server.Users.Messages.Get(p.GmailUserID, p.Message.Id).Format("raw").Do()
+	if err != nil {
+		log.Fatalf("Unable to read message details: %v", err)
+	}
+
+	imageUrl, link := parseMessage(msg.Raw)
+	for _, recipientId := range p.Recipients {
+		status, err := p.Client.SendMessage(recipientId, msg.Snippet, imageUrl, link)
+
+		if err != nil {
+			fmt.Printf("Unable to send message details: %v", err)
+			continue
+		}
+
+		if status != http.StatusOK {
+			fmt.Printf("Message %s to %s not sent, status %d\n", msg.Id, recipientId, status)
+			continue
+		}
+
+		fmt.Printf("%d) Message %s to %s sent\n", op.Counter, msg.Id, recipientId)
+	}
+
+	<-op.Limiter
 }
 
 func parseMessage(rawMessage string) (imageUrl, link string) {
