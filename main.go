@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/flashlabs/idealista2messenger/internal/initializer"
 	"github.com/flashlabs/idealista2messenger/internal/runner"
-	"time"
 )
 
 const (
