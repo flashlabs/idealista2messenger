@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -34,6 +35,7 @@ func Cfg(dir string) *Config {
 func readCfg(target interface{}, dir, file string) {
 	p := filepath.Join(dir, file)
 	err := readYaml(target, p)
+
 	if err != nil {
 		log.Fatalf("failed to read config '%s' file: %s\n", p, err.Error())
 	}
@@ -42,7 +44,7 @@ func readCfg(target interface{}, dir, file string) {
 func readYaml(cfg interface{}, path string) error {
 	f, err := os.OpenFile(path, os.O_RDONLY|os.O_SYNC, 0)
 	if err != nil {
-		return err
+		return fmt.Errorf("error opening yaml file: %w", err)
 	}
 
 	defer func() {
@@ -51,5 +53,10 @@ func readYaml(cfg interface{}, path string) error {
 		}
 	}()
 
-	return yaml.NewDecoder(f).Decode(cfg)
+	err = yaml.NewDecoder(f).Decode(cfg)
+	if err != nil {
+		return fmt.Errorf("error while decoding yaml: %w", err)
+	}
+
+	return nil
 }

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.19.x' ]
+        go-version: [ '1.21.x' ]
 
     steps:
       - name: Setup Go ${{ matrix.go-version }}
@@ -25,4 +25,6 @@ jobs:
       - name: Lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.50.1
+          args: --skip-dirs-use-default=false -p bugs -D scopelint -p comment -D godox -p error -p format -D gofumpt -p import -D depguard -p metalinter -D revive -p performance -p sql -E testableexamples -E unparam -E asciicheck -E containedctx -E errname -E goconst -E ireturn -E nlreturn -E tenv -E testpackage -E usestdlibvars -E wastedassign -E whitespace -E wrapcheck -E wsl --exclude IfElseChain --timeout 5m
+          skip-cache: true
+          version: v1.54.2

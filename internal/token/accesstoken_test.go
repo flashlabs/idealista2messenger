@@ -1,4 +1,4 @@
-package token
+package token_test
 
 import (
 	"os"
@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 
+	"github.com/flashlabs/idealista2messenger/internal/token"
+
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
 )
 
@@ -15,6 +17,7 @@ func TestAccessTokenFromFile(t *testing.T) {
 	type args struct {
 		file string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -38,11 +41,13 @@ func TestAccessTokenFromFile(t *testing.T) {
 			wantErr: true,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := AccessTokenFromFile(tt.args.file)
+			got, err := token.AccessTokenFromFile(tt.args.file)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("AccessTokenFromFile() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
@@ -59,7 +64,7 @@ func TestSaveAccessToken(t *testing.T) {
 	_ = os.Remove(path)
 
 	assert.NoFileExists(t, path)
-	SaveAccessToken(path, &oauth2.Token{
+	token.SaveAccessToken(path, &oauth2.Token{
 		AccessToken:  "access_token",
 		TokenType:    "Bearer",
 		RefreshToken: "refresh_token",

@@ -20,13 +20,15 @@ type markAsReadOperators struct {
 	Counter   int
 }
 
-// MarkRead marks given messages in the Gmail service as read
+// MarkRead marks given messages in the Gmail service as read.
 func MarkRead(srv *gmail.Service, r *gmail.ListMessagesResponse, userId string) error {
 	wg := sync.WaitGroup{}
 	limiter := make(chan int, 20)
+
 	defer close(limiter)
 
 	counter := 0
+
 	for _, m := range r.Messages {
 		wg.Add(1)
 		limiter <- 1

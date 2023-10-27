@@ -1,15 +1,17 @@
-package initializer
+package initializer_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/flashlabs/idealista2messenger/internal/initializer"
+
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
 )
 
 func TestCfg(t *testing.T) {
-	var config = Cfg("config")
+	var config = initializer.Cfg("config")
 
 	t.Run("test application config", func(t *testing.T) {
 		assert.NotEmpty(t, config.Application.Name)

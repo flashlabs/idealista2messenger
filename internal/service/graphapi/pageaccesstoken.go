@@ -2,6 +2,7 @@ package graphapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -12,10 +13,17 @@ type PageAccessToken struct {
 func PageAccessTokenFromFile(file string) (*PageAccessToken, error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while opening page access token file: %w", err)
 	}
+
 	defer f.Close()
+
 	tok := &PageAccessToken{}
 	err = json.NewDecoder(f).Decode(tok)
-	return tok, err
+
+	if err != nil {
+		return nil, fmt.Errorf("error while decoding page access token file: %w", err)
+	}
+
+	return tok, nil
 }

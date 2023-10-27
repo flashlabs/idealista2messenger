@@ -12,13 +12,14 @@ import (
 	"github.com/flashlabs/idealista2messenger/internal/token"
 )
 
-// GoogleClient creates new Google Client and returns it
+// GoogleClient creates new Google Client and returns it.
 func GoogleClient(credentials []byte, tokenFile string) (*http.Client, error) {
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(credentials, gmail.GmailModifyScope)
 	if err != nil {
-		return nil, fmt.Errorf("unable to parse client secret file to config: %v", err)
+		return nil, fmt.Errorf("unable to parse client secret file to config: %w", err)
 	}
+
 	return client(config, tokenFile), nil
 }
 
@@ -32,5 +33,6 @@ func client(config *oauth2.Config, tokenFile string) *http.Client {
 		tok = token.AccessTokenFromWeb(config)
 		token.SaveAccessToken(tokenFile, tok)
 	}
+
 	return config.Client(context.Background(), tok)
 }
