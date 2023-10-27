@@ -35,14 +35,16 @@ func SendMessages(srv *gmail.Service, r *gmail.ListMessagesResponse, pageAccessT
 
 	c, err := graphapi.NewGraphApiClient(pageAccessToken, pageId)
 	if err != nil {
-		return err
+		return fmt.Errorf("error while creating new graph api client: %w", err)
 	}
 
 	wg := sync.WaitGroup{}
 	limiter := make(chan int, 20)
+
 	defer close(limiter)
 
 	counter := 0
+
 	for _, m := range r.Messages {
 		wg.Add(1)
 		limiter <- 1
@@ -71,7 +73,11 @@ func sendMessage(p sendMessageParams, op sendMessageOperators) {
 
 	msg, err := p.Server.Users.Messages.Get(p.GmailUserID, p.Message.Id).Format("raw").Do()
 	if err != nil {
-		log.Fatalf("Unable to read message details: %v", err)
+		op.WaitGroup.Done()
+
+		log.Printf("Unable to read message details: %v", err)
+
+		return
 	}
 
 	imageUrl, link := parseMessage(msg.Raw)
@@ -80,11 +86,13 @@ func sendMessage(p sendMessageParams, op sendMessageOperators) {
 
 		if err != nil {
 			fmt.Printf("Unable to send message details: %v", err)
+
 			continue
 		}
 
 		if status != http.StatusOK {
 			fmt.Printf("Message %s to %s not sent, status %d\n", msg.Id, recipientId, status)
+
 			continue
 		}
 
@@ -97,17 +105,18 @@ func sendMessage(p sendMessageParams, op sendMessageOperators) {
 func parseMessage(rawMessage string) (imageUrl, link string) {
 	raw := decodePayload(rawMessage)
 
-	r, _ := regexp.Compile("https://www.idealista.com/en/inmueble/([0-9]+)/")
+	r := regexp.MustCompile("https://www.idealista.com/en/inmueble/([0-9]+)/")
 	link = r.FindString(raw)
 
-	r, _ = regexp.Compile("blur/([a-zA-Z0-9_]+)/0")
+	r = regexp.MustCompile("blur/([a-zA-Z0-9_]+)/0")
 	urlPart := r.FindString(raw)
+
 	if urlPart == "" {
 		urlPart = "blur/500_375_mq/0"
 	}
 
 	// the less in pattern, the better
-	r, _ = regexp.Compile("([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+).j")
+	r = regexp.MustCompile("([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+)/([a-z0-9]+).j")
 	imageUrl = r.FindString(raw)
 
 	imageUrlTemplate := "https://img3.idealista.com/%s/id.pro.es.image.master/%spg"
@@ -120,7 +129,12 @@ func decodePayload(rawMessage string) string {
 	raw := string(decoded)
 
 	// remove the headers parts causing issues
-	raw = raw[strings.Index(raw, "<!doctype"):]
+	idx := strings.Index(raw, "<!doctype")
+	if idx == -1 {
+		idx = 0
+	}
+
+	raw = raw[idx:]
 
 	return decodeQuotedPrintable(raw)
 }
