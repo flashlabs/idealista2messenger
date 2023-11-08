@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "assigneesFromCodeOwners": false,
-  "reviewersFromCodeOwners": false,
+  "reviewersFromCodeOwners": true,
   "automerge": false,
   "rangeStrategy": "pin",
   "branchPrefix": "feature/renovate_",
