@@ -5,7 +5,7 @@
   "automerge": false,
   "rangeStrategy": "pin",
   "branchPrefix": "feature/renovate_",
-  "semanticCommitType": "RENOVATEBOT | ",
+  "commitMessagePrefix": "RENOVATEBOT | ",
   "labels": [
     "chore"
   ]
