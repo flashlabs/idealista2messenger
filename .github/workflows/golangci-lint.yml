@@ -27,3 +27,4 @@ jobs:
         with:
           skip-cache: true
           version: v1.54.2
+          args: --timeout=5m
