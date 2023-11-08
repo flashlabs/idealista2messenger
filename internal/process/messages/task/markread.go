@@ -8,10 +8,10 @@ import (
 )
 
 type markAsReadParams struct {
-	Server               *gmail.Service
-	UserID               string
-	MessageID            string
 	ModifyMessageRequest *gmail.ModifyMessageRequest
+	Server               *gmail.Service
+	MessageID            string
+	UserID               string
 }
 
 type markAsReadOperators struct {

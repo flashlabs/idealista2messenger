@@ -32,7 +32,7 @@ func Cfg(dir string) *Config {
 	return c
 }
 
-func readCfg(target interface{}, dir, file string) {
+func readCfg(target any, dir, file string) {
 	p := filepath.Join(dir, file)
 	err := readYaml(target, p)
 
@@ -41,7 +41,7 @@ func readCfg(target interface{}, dir, file string) {
 	}
 }
 
-func readYaml(cfg interface{}, path string) error {
+func readYaml(cfg any, path string) error {
 	f, err := os.OpenFile(path, os.O_RDONLY|os.O_SYNC, 0)
 	if err != nil {
 		return fmt.Errorf("error opening yaml file: %w", err)

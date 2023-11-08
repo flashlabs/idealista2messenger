@@ -8,9 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 
-	"github.com/flashlabs/idealista2messenger/internal/token"
-
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
+	"github.com/flashlabs/idealista2messenger/internal/token"
 )
 
 func TestAccessTokenFromFile(t *testing.T) {
@@ -19,9 +18,9 @@ func TestAccessTokenFromFile(t *testing.T) {
 	}
 
 	tests := []struct {
+		want    *oauth2.Token
 		name    string
 		args    args
-		want    *oauth2.Token
 		wantErr bool
 	}{
 		{

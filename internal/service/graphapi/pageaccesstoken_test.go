@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
-
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
 )
 
@@ -15,9 +14,9 @@ func TestPageAccessTokenFromFile(t *testing.T) {
 	}
 
 	tests := []struct {
+		want    *graphapi.PageAccessToken
 		name    string
 		args    args
-		want    *graphapi.PageAccessToken
 		wantErr bool
 	}{
 		{

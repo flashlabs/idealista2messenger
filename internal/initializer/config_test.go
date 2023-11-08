@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/flashlabs/idealista2messenger/internal/initializer"
-
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
 )
 
