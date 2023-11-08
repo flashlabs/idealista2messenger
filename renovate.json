@@ -1,0 +1,12 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assigneesFromCodeOwners": false,
+  "reviewersFromCodeOwners": false,
+  "automerge": false,
+  "rangeStrategy": "pin",
+  "branchPrefix": "feature/renovate_",
+  "semanticCommitType": "RENOVATEBOT | ",
+  "labels": [
+    "chore"
+  ]
+}
