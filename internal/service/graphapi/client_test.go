@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/flashlabs/idealista2messenger/internal/service/graphapi"
-
 	_ "github.com/flashlabs/idealista2messenger/internal/test"
 )
 
