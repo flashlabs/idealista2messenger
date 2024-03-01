@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/flashlabs/rootpath v1.0.2
 	github.com/joho/godotenv v1.5.1
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.16.0
 	google.golang.org/api v0.157.0
 	gopkg.in/yaml.v3 v3.0.1
