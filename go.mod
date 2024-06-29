@@ -3,7 +3,7 @@ module github.com/flashlabs/idealista2messenger
 go 1.21
 
 require (
-	github.com/flashlabs/rootpath v1.1.4
+	github.com/flashlabs/rootpath v1.1.5
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.16.0
