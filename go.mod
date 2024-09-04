@@ -6,14 +6,14 @@ require (
 	github.com/flashlabs/rootpath v1.1.4
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/oauth2 v0.16.0
+	golang.org/x/oauth2 v0.23.0
 	google.golang.org/api v0.157.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	cloud.google.com/go/compute v1.23.3 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
